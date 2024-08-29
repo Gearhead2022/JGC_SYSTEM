@@ -1,0 +1,202 @@
+{% extends "myapp/layouts/base.html" %}
+{% block title %}PDR Collection{% endblock %}
+{% load static %}
+{% load custom_filters %}
+{% block content %}
+
+<link href="{% static 'myapp/css/custom.css' %}" rel="stylesheet">
+
+<!-- Page Content -->
+<div class="container-fluid mt-4">
+    <!-- Page Title -->
+    <div class="row mb-4">
+        <div class="text-light">
+            <h5>PAST DUE LEDGER</h5>
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="d-flex justify-content-end mb-3" role="toolbar" aria-label="Toolbar with button groups">
+              <!-- Column for the Back button, aligned to the left -->
+            <div class="col d-flex justify-content-start">
+                <button type="button" class="btn btn-custom-secondary btn-icon" onClick="location.href='{% url "past_due" %}'" data-bs-placement="bottom" title="Back">
+                    <span class="icon">
+                        <i class="material-symbols-outlined">chevron_left</i>
+                    </span>
+                    <span class="btn-label">Back</span>
+                </button>
+            </div>
+            <div class="btn-group me-2" role="group" aria-label="First group">
+                <button type="button" class="btn btn-custom-primary btn-icon btn_add_pdr_account" data-bs-toggle="modal" data-bs-target="#add_ledger_modal" data-bs-placement="bottom" title="Add Ledger">
+                    <span class="icon">
+                        <i class="material-symbols-outlined">add_ad</i>
+                    </span>
+                    <span class="btn-label">Add Ledger</span>
+                </button>
+                {% if combined_data %}
+                <button type="button" class="btn btn-custom-danger btn-icon print_ledger" data-bs-toggle="tooltip" data-bs-placement="bottom"  account-id="{{ combined_data.0.account_id }}" branch-name="{{ combined_data.0.branch_name }}" title="Print">
+                    <span class="icon">
+                        <i class="material-symbols-outlined">picture_as_pdf</i>
+                    </span>
+                    <span class="btn-label">Print PDF</span>
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Table -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card text-light" style="background-color: #212529;">
+                <div class="card-body">
+                    <table id="default-datatable" class="table table-striped table-dark table-bordered table_ledger">
+                        <thead>
+                            <tr>
+                                <th>ACCOUNT ID</th>
+                                <th>NAME</th>
+                                <th>DATE</th>
+                                <th>REFFERENCE NO.</th>
+                                <th>DEBIT</th>
+                                <th>CREDIT</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for combined_data in combined_data %}
+                                <tr>
+                                    <td>{{ combined_data.account_id }}</td>
+                                    <td>{{ combined_data.pd_first_name }}{{ combined_data.pd_middle_name }}{{ combined_data.pd_last_name }}</td>
+                                    <td>{{ combined_data.pdl_date }}</td>
+                                    <td>{{ combined_data.pdl_refno }}</td>
+                                    <td>{{ combined_data.pdl_debit }}</td>
+                                    <td>{{ combined_data.pdl_credit }}</td>
+                                    <td style="vertical-align:middle;">
+                                        <span class="material-symbols-outlined btn btn-primary edit-btn" data-bs-toggle="modal" data-bs-target="#editLedgerModal_{{ combined_data.pdl_id|replace_space }}"> edit </span>
+                                        <span class="material-symbols-outlined btn btn-danger btn_delete_ledger" name="ledger_id" data-ledger-id="{{ combined_data.pdl_id }}"> delete </span>         
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="edit_ledger_modal" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">EDIT LEDGER</h5>
+          <button type="button" class="btn-close btn-custom-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form class="editLedgerForm" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-body">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 form-group">
+                            <label for="account_no" class="form-label">ACCOUNT NUMBER</label>
+                            <input type="text" class="form-control" id="account_no" readonly name="account_no" autocomplete="nope" required>
+                            <input type="text" class="form-control" id="pdl_id" hidden value="{{ combined_data.pdl_id }}" name="pdl_id" autocomplete="nope" required>
+                        </div>   
+                        <div class="col-sm-6 form-group">
+                            <label for="pdl_date" class="form-label">DATE</label>
+                            <input type="date" class="form-control" id="pdl_date" placeholder="Enter Date" name="pdl_date" autocomplete="nope" required>
+                        </div>  
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-6 form-group">
+                            <label for="pdl_refno" class="form-label">REFFERENCE NUMBER</label>
+                            <input type="text" class="form-control" id="pdl_refno"  placeholder="Enter Refference Number" name="pdl_refno" autocomplete="nope" required>
+                        </div>   
+                        <div class="col-sm-6 form-group">
+                            <label for="pdl_amount" class="form-label">AMOUNT</label>
+                            <input type="number" class="form-control" id="pdl_amount" step="any" value="{% if combined_data.pdl_credit %}{{ combined_data.pdl_credit }}{% else %}{{ combined_data.pdl_debit }}{% endif %}"  placeholder="Enter Amount" name="pdl_amount" autocomplete="nope" required>
+                        </div>  
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 form-group">
+                        <input type="checkbox" {% if combined_data.pay_mis == 1 %}checked{% endif %} id="pay_mis" name="pay_mis" autocomplete="nope">
+                        <label for="pay_mis" class="form-label">MISCELLANEOUS</label>
+                        </div>
+                        <div class="col-sm-6 form-group include_week1" id="include_week1">
+                        <input type="checkbox" {% if combined_data.include_week == 1 %}checked{% endif %} id="include_week" value name="include_week" autocomplete="nope">
+                        <label for="pay_mis" class="form-label">INCLUDE IN WEEKLY</label>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn waves-effect waves-light btn-custom-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn waves-effect waves-light btn-custom-primary">Save</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<div class="modal fade" id="add_ledger_modal" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">ADD LEDGER</h5>
+          <button type="button" class="btn-close btn-custom-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form class="addLedgerForm" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-body">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        {% if user.is_authenticated %}
+                        <div class="col-sm-6 form-group">
+                            <label for="account_no" class="form-label">ACCOUNT NUMBER</label>
+                            <input type="text" hidden class="form-control" id="branch_name" value="{{ user.username|replace_underscore }}" name="branch_name" autocomplete="nope" required>
+                            <input type="text" class="form-control" id="account_id" value="" name="account_id" autocomplete="nope" required>
+                        </div>   
+                        <div class="col-sm-6 form-group">
+                            <label for="pdl_date" class="form-label">DATE</label>
+                            <input type="date" class="form-control" id="pdl_date" value="{{ x }}" placeholder="Enter Date" name="pdl_date" autocomplete="nope" required>
+                        </div>  
+                        {% endif %}
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-6 form-group">
+                            <label for="pdl_refno" class="form-label">REFFERENCE NUMBER</label>
+                            <input type="text" class="form-control" id="pdl_refno" placeholder="Enter Refference Number" name="pdl_refno" autocomplete="nope" required>
+                        </div>   
+                        <div class="col-sm-6 form-group">
+                            <label for="pdl_amount" class="form-label">AMOUNT</label>
+                            <input type="number" class="form-control" id="pdl_amount" step="any" placeholder="Enter Amount" name="pdl_amount" autocomplete="nope" required>
+                        </div>  
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 form-group">
+                        <input type="checkbox" id="pay_mis" name="pay_mis" autocomplete="nope">
+                        <label for="pay_mis" class="form-label">MISCELLANEOUS</label>
+                        </div>
+                        <div class="col-sm-6 form-group include_week1" id="include_week1">
+                        <input type="checkbox" id="include_week" value name="include_week" autocomplete="nope">
+                        <label for="pay_mis" class="form-label">INCLUDE IN WEEKLY</label>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn waves-effect waves-light btn-custom-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn waves-effect waves-light btn-custom-primary">Save</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+

@@ -1,0 +1,417 @@
+/* styles.css */
+
+*,*:before,*:after {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box
+}
+
+body {
+    color: #73879C;
+    background: #2A3F54;
+    font-family: "Helvetica Neue", Roboto, Arial, "Droid Sans", sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.471;
+    height: auto;
+    margin-bottom: 80px;
+}
+
+.sidebar {
+    background-color: #343a40;
+    color: #fff;
+    height: 100vh;
+    position: fixed;
+}
+
+.sidebar .list-group-item {
+    background-color: #343a40;
+    color: #fff;
+}
+
+.sidebar .list-group-item:hover {
+    background-color: #495057;
+}
+
+.footer {
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+.jumbotron {
+    background-color: #e9ecef;
+    padding: 2rem 1rem;
+}
+
+/* navbar css */
+
+.navbar{
+    background-color: #343a40;
+}
+
+.navbar-brand img {
+    margin-right: 10px;
+}
+
+.navbar-nav .nav-item .nav-link {
+    margin-right: 10px;
+}
+
+.navbar-nav .nav-item .dropdown-menu {
+    left: auto;
+    right: 0;
+}
+
+.navbar-nav .nav-item .dropdown-menu-end {
+    right: 0;
+    left: auto;
+}
+
+.navbar-nav .nav-item .nav-link img {
+    margin-right: 5px;
+}
+
+/* footer css */
+footer.footer.mt-auto.py-3.footer-dark.bg-dark{
+    background-color: #212529 !important;
+}
+
+
+a,a:visited,a:focus,a:active,:visited,:focus,:active,.btn:focus,.btn:active:focus,.btn.active:focus,.btn.focus,.btn:active.focus,.btn.active.focus {
+    outline: 0
+}
+button,.buttons,.btn,.modal-footer .btn+.btn {
+    margin-bottom: 5px;
+    margin-right: 5px
+}
+
+
+/* styles for all custom buttons */
+
+/* Base button styles */
+/* Base button styles */
+.btn-custom {
+    border-radius: 10% !important;
+    font-weight: 600;
+    padding: 10px 20px;
+    transition: background-color 0.3s, transform 0.3s;
+    will-change: transform; /* Prevents enlargement */
+    font-size: 12px;
+}
+.btn-custom-round {
+    border-radius: 200% !important;
+}
+
+/* Primary button */
+.btn-custom-primary {
+    background-color: #08655D;
+    border: 1px solid #08655D;
+    color: #ffffff;
+}
+
+.btn-custom-primary:hover {
+    background-color: #065D52;
+    border-color: #065D52;
+    color: #ffffff;
+}
+
+.btn-custom-primary:focus, .btn-custom-primary:active {
+    background-color: #054D42;
+    border-color: #054D42;
+    color: #ffffff;
+    outline: none;
+    box-shadow: none;
+    transform: scale(1); /* Prevents enlargement */
+}
+
+/* Secondary button */
+.btn-custom-secondary {
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    color: #495057;
+}
+
+.btn-custom-secondary:hover {
+    background-color: #e2e6ea;
+    border-color: #dae0e5;
+    color: #495057;
+}
+
+.btn-custom-secondary:focus, .btn-custom-secondary:active {
+    background-color: #dae0e5;
+    border-color: #ced4da;
+    color: #495057;
+    outline: none;
+    box-shadow: none;
+    transform: scale(1); /* Prevents enlargement */
+}
+
+/* Success button */
+.btn-custom-success {
+    background-color: #28a745;
+    border: 1px solid #28a745;
+    color: #ffffff;
+}
+
+.btn-custom-success:hover {
+    background-color: #218838;
+    border-color: #218838;
+    color: #ffffff;
+}
+
+.btn-custom-success:focus, .btn-custom-success:active {
+    background-color: #1e7e34;
+    border-color: #1e7e34;
+    color: #ffffff;
+    outline: none;
+    box-shadow: none;
+    transform: scale(1); /* Prevents enlargement */
+}
+
+/* Danger button */
+.btn-custom-danger {
+    background-color: #dc3545;
+    border: 1px solid #dc3545;
+    color: #ffffff;
+}
+
+.btn-custom-danger:hover {
+    background-color: #c82333;
+    border-color: #c82333;
+    color: #ffffff;
+}
+
+.btn-custom-danger:focus, .btn-custom-danger:active {
+    background-color: #bd2130;
+    border-color: #bd2130;
+    color: #ffffff;
+    outline: none;
+    box-shadow: none;
+    transform: scale(1); /* Prevents enlargement */
+}
+
+/* Warning button */
+.btn-custom-warning {
+    background-color: #ffc107;
+    border: 1px solid #ffc107;
+    color: #212529;
+}
+
+.btn-custom-warning:hover {
+    background-color: #e0a800;
+    border-color: #e0a800;
+    color: #212529;
+}
+
+.btn-custom-warning:focus, .btn-custom-warning:active {
+    background-color: #d39e00;
+    border-color: #d39e00;
+    color: #212529;
+    outline: none;
+    box-shadow: none;
+    transform: scale(1); /* Prevents enlargement */
+}
+
+/* Info button */
+.btn-custom-info {
+    background-color: #17a2b8;
+    border: 1px solid #17a2b8;
+    color: #ffffff;
+}
+
+.btn-custom-info:hover {
+    background-color: #138496;
+    border-color: #138496;
+    color: #ffffff;
+}
+
+.btn-custom-info:focus, .btn-custom-info:active {
+    background-color: #117a8b;
+    border-color: #117a8b;
+    color: #ffffff;
+    outline: none;
+    box-shadow: none;
+    transform: scale(1); /* Prevents enlargement */
+}
+
+/* Light button */
+.btn-custom-light {
+    background-color: #f8f9fa;
+    border: 1px solid #f8f9fa;
+    color: #212529;
+}
+
+.btn-custom-light:hover {
+    background-color: #e2e6ea;
+    border-color: #dae0e5;
+    color: #212529;
+}
+
+.btn-custom-light:focus, .btn-custom-light:active {
+    background-color: #dae0e5;
+    border-color: #ced4da;
+    color: #212529;
+    outline: none;
+    box-shadow: none;
+    transform: scale(1); /* Prevents enlargement */
+}
+
+/* Dark button */
+.btn-custom-dark {
+    background-color: #343a40;
+    border: 1px solid #343a40;
+    color: #ffffff;
+}
+
+.btn-custom-dark:hover {
+    background-color: #23272b;
+    border-color: #23272b;
+    color: #ffffff;
+}
+
+.btn-custom-dark:focus, .btn-custom-dark:active {
+    background-color: #1d2124;
+    border-color: #1d2124;
+    color: #ffffff;
+    outline: none;
+    box-shadow: none;
+    transform: scale(1); /* Prevents enlargement */
+}
+
+
+/* Loading screen styles */
+#loading-screen {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.spinner {
+    width: 100px;
+    height: 100px;
+    border: 5px solid rgba(0, 0, 0, 0.1);
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    color: #3498db;
+    font-weight: bold;
+    text-align: center;
+    animation: fadeIn 1.5s infinite;
+}
+
+@keyframes fadeIn {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+
+ul.dropdown-menu.show {
+    background-color: #223247;
+}
+
+
+.modal-header, .modal-footer {
+ background-color: #2A3F54 !important;
+ color: white;
+}
+
+.modal-body, .card{
+    background-color: #59717d;
+}
+
+.col-form-label{
+    color: #fff;
+}
+ 
+.fc .fc-col-header-cell-cushion {
+    display: inline-block;
+    padding: 2px 4px;
+    color: white;
+}
+.fc .fc-daygrid-day-number {
+    padding: 4px;
+    position: relative;
+    z-index: 4;
+    color: white;
+}
+
+.fc .fc-daygrid-day-frame {
+    min-height: 100%;
+    position: relative;
+    color: white;
+    background-color: #2A3F54;
+}
+
+.fc-direction-ltr .fc-list-day-text, .fc-direction-rtl .fc-list-day-side-text {
+    float: left;
+    color: black;
+}
+     
+/* for data table*/
+
+div.dt-container .dt-input{
+    background-color: black;
+}
+
+table.dataTable thead>tr>th.dt-orderable-asc, table.dataTable thead>tr>th.dt-orderable-desc, table.dataTable thead>tr>th.dt-ordering-asc, table.dataTable thead>tr>th.dt-ordering-desc, table.dataTable thead>tr>td.dt-orderable-asc, table.dataTable thead>tr>td.dt-orderable-desc, table.dataTable thead>tr>td.dt-ordering-asc, table.dataTable thead>tr>td.dt-ordering-desc{
+    padding-right: 50px;
+}
+
+/* for input fields */
+input::placeholder, [type="date"]::placeholder{
+   
+    color: rgb(169, 183, 214) !important;
+    font-style: italic;
+}
+
+.form-control{
+    background-color: rgb(0, 0, 0) !important;
+    border: solid black 1px;
+    color: white;
+}
+
+.form-control:focus{
+    background-color: #0b0218 !important;
+    border: solid white 2px;
+    color: rgb(231, 228, 236);
+}
+
+.form-label{
+    color: white;
+}
+
+/* Change the color of the date input icon in WebKit browsers */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(95%); /* Change the color to your desired color */
+}
+
+[type="checkbox"] {
+    height: 19px !important;
+    width: 19px !important;
+}
+
+.me-6 {
+    margin-right: 3.7rem !important;
+}
+

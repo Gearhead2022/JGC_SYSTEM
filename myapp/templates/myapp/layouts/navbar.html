@@ -1,0 +1,68 @@
+{% load static %}
+{% load custom_filters %}
+
+
+{% block content %}
+<!-- navbar.html -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url "index" %}">
+            <img src="{% static 'myapp/images/jgc_bw.jpg' %}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
+            JGC SYSTEM
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        JGC Modules
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{% url "checkwriter" %}">Check Writer</a></li>
+                        <li><a class="dropdown-item" href="{% url "or_printing" %}">OR Printing</a></li>
+                        <li><a class="dropdown-item" href="{% url "past_due" %}">Past Due</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Extras
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
+                        <li><a class="dropdown-item" href="{% url "nah" %}">NAH Booking</a></li>
+                        <li><a class="dropdown-item" href="{% url "employee" %}">Manage Employee</a></li>
+                        <li><a class="dropdown-item" href="{% url "past_due_ledger_admin" %}">Past Due Ledger Admin</a></li>
+                        <li><a class="dropdown-item" href="{% url "ssp_ledger" %}">SSP Ledger</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{% static 'myapp/images/Untitled.png' %}" alt="User" width="30" height="30" class="rounded-circle">
+                        {% if user.is_authenticated %}
+                            <span class="text-light">{{ user.username|replace_underscore }}</span>
+                        {% else %}
+                            Guest
+                        {% endif %}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item profile-link" href="#"><i class="fa fa-user-o pull-right btn btn-info"></i> Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url "logout_form" %}"><i class="fa fa-sign-out pull-right btn btn-danger"></i> Log Out</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+{% if user.username == 'admin' %}
+{% endif %}
+
+
+
+
+{% endblock content %}
+

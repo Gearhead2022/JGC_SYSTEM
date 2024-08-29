@@ -1,0 +1,55 @@
+/* For page buttons css */
+
+.btn-icon {
+    position: relative;
+    width: 48px; /* Initial width */
+    height: 48px;
+    overflow: hidden;
+    transition: width 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.btn-icon .icon {
+    position: absolute;
+    left: 12px;
+    top: 10px;
+}
+
+.btn-icon .btn-label {
+    position: absolute;
+    left: 56px;
+    line-height: 48px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.btn-icon:hover .btn-label {
+    left: 40px;
+    opacity: 1;
+}
+
+.material-symbols-outlined {
+    font-size: 24px;
+}
+
+.right-toolbar {
+    display: flex;
+    justify-content: flex-end;
+}
+
+a.dropdown-item{
+    position: relative;
+    padding-left: 1.2em; /* Add padding to make space for the bullet */
+    color: white;
+}
+
+a.dropdown-item::before {
+    content: '•'; /* Unicode character for bullet */
+    position: absolute;
+    left: 0.4em; /* Position the bullet */
+    color: white; /* Bullet color */
+    font-size: 1em; /* Adjust bullet size */
+}
+

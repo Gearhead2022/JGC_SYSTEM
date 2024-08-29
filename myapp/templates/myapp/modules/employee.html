@@ -1,0 +1,529 @@
+{% extends "myapp/layouts/base.html" %}
+{% block title %}Employee Masterlist{% endblock %}
+{% load static %}
+{% block content %}
+
+<!-- Page Content -->
+<div class="container-fluid mt-4">
+    <!-- Page Title -->
+    <div class="row mb-4">
+        <div class="col text-light">
+            <h5>EMPLOYEE MASTERLIST</h5>
+        </div>
+    </div>
+
+    <!-- Form and Buttons -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-round btn-custom btn-custom-primary waves-effect waves-light m-1 addNewEmp">
+                <i class="fa fa-plus"></i> <span>&nbsp;ADD NEW RECORD</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card text-light" style="background-color: #212529;">
+                <div class="card-body">
+                    <table id="default-datatable" class="table table-striped table-dark table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>CODE</th>
+                                <th>FIRSTNAME</th>
+                                <th>MIDDLENAME</th>
+                                <th>LASTNAME</th>
+                                <th>POSITION</th>
+                                <th>DEPARTMENT</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+    
+                            {% for info in employees %}
+                        
+                            <tr>
+    
+                            <td>{{ info.EmpCode }}</td>
+                            <td>{{ info.Firstname }}</td>
+                            <td>{{ info.Middlename }}</td>
+                            <td>{{ info.Lastname }}</td>
+                            <td>
+                              {% if info.Position == 'Prog' %}
+                                  Programmer
+                              {% elif info.Position == 'Superv' %}
+                                  Supervisor
+                              {% elif info.Position == 'Head' %}
+                                  Dept. Head
+                              {% endif %}
+                            </td>
+                            <td>
+                              {% if info.Department == 'MIS' %}
+                                  MIS
+                              {% elif info.Department == 'M2' %}
+                                  M2
+                              {% elif info.Department == 'Cadiz' %}
+                                  Cadiz
+                              {% endif %}
+                            </td>
+                          
+                            <td style="vertical-align:middle;">
+                            <a class="material-symbols-outlined btn btn-success" data-bs-toggle="modal" data-bs-target="#viewEmpModal_{{info.EmpCode}}"> wysiwyg </a>                                                                  
+                            <span class="material-symbols-outlined btn btn-primary edit-btn" data-bs-toggle="modal" data-bs-target="#updateEmpModal_{{info.EmpCode}}"> edit </span>
+                             
+                          {% if perms.myapp.can_delete_employee %}
+                            <span class="material-symbols-outlined btn btn-danger delete-btn" data-bs-toggle="modal" data-bs-target="#deleteEmpModal_{{info.EmpCode}}"> delete </span>        
+                          {% endif %}  
+                          </td>
+    
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% for info in employees %}
+
+<!-- UPDATE EMPLOYEE LIST MODAL -->
+<div class="modal fade" id="updateEmpModal_{{ info.EmpCode }}" tabindex="-1" aria-labelledby="updateEmpModal_{{info.EmpCode}}" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+  
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateEmpForm{{ info.EmpCode}}"><strong>EDIT EMPLOYEE INFO</strong></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+            </button>
+      </div>
+
+      <form class="updateEmpForm" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+      <div class="modal-body">
+        {% comment %} <input type="hidden" name="id" value="{{info.EmpCode}}"> {% endcomment %}
+        <div class="row">
+          <div class="col-lg-4 col-sm-4">
+            <label for="EmpImg" class="form-label">Profile image</label>
+            {% if info.EmpImg %}
+              <img id="blah_update_{{ info.EmpCode }}" accept="image/*" src="{{ info.EmpImg.url }}" style="height: 300px; width: 300px; border: 1px solid black; cursor: pointer;">
+            {% else %}
+              <img id="blah_update_{{ info.EmpCode }}" accept="image/*" src="https://img.icons8.com/dotty/80/000000/upload.png" style="height: 300px; width: 300px; border: 1px solid black; cursor: pointer;">
+            {% endif %}
+            <input type="file" id="EmpImg_update_{{ info.EmpCode }}"  accept="image/*" name="EmpImg" style="display:none">
+
+          </div>
+          <div class="col-lg-8 col-sm-8">
+            <div class="row">
+              <div class="col-lg-4 col-sm-4">
+                <input type="hidden" name="action" value="updateEmp">
+                <div class="" style="display:block;">
+                  <label for="name"  class="form-label">EMPCODE</label>
+                  <input type="text" name="EmpCode" readonly class="form-control" value="{{info.EmpCode}}" id="EmpCode" required>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-4 col-sm-4">
+                <div class="form-group">
+                  <label for="name"  class="form-label">Firstname</label>
+                  <input type="text" name="Firstname" class="form-control" value="{{info.Firstname }}" id="Firstname" required>
+                </div>
+              </div>
+              <div class="col-lg-4 col-sm-4">
+        
+                <div class="form-group">
+                  <label for="name"  class="form-label">Middlename</label>
+                  <input type="text" name="Middlename" class="form-control" value="{{info.Middlename }}" id="Middlename" required>
+                </div>
+              </div>
+              <div class="col-lg-4 col-sm-4">
+                <div class="form-group">
+                  <label for="name"  class="form-label">Lastname</label>
+                  <input type="text" name="Lastname" class="form-control" value="{{info.Lastname }}" id="Lastname" required>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-4 col-sm-4">
+                <div class="form-group">
+                    <label for="Datebirth"  class="form-label">Birth Date</label>
+                    <input type="date" name="Birthdate" value="{{ info.DateofBirth|date:'Y-m-d' }}" class="form-control" id="Birthdate" required>
+                </div>
+              </div>
+              <div class="col-lg-4 col-sm-4">
+                <div class="form-group">
+                  <label for="Middlename"  class="form-label">Gender</label>
+                  <select class="form-control" name="Gender" id="Gender" required>
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="M" {% if info.Gender == 'M' %} selected {% endif %}>Male</option>
+                    <option value="F" {% if info.Gender == 'F' %} selected {% endif %}>Female</option>
+                    <option value="O" {% if info.Gender == 'O' %} selected {% endif %}>others</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-4 col-sm-4">
+                <div class="form-group">
+                    <label for="Lastname"  class="form-label">Civil Status</label>
+                    <select class="form-control" name="Status" id="Status" required>
+                      <option value="S" {% if info.CivilStatus == 'S' %} selected {% endif %}>Single</option>
+                      <option value="M" {% if info.CivilStatus == 'M' %} selected {% endif %}>Married</option>
+                      <option value="A" {% if info.CivilStatus == 'A' %} selected {% endif %}>Annuled</option>
+                  </select>
+                </div>         
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12 col-sm-12">
+                <div class="form-group">
+                    <label for="EmpCode" class="form-label">Address</label>
+                    <input type="text" name="Address" value="{{info.Address}}" class="form-control" id="Address" required>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    <label for="EmpCode" class="form-label">Position</label>
+                    <select class="form-control" name="Position" id="Position" required>         
+                      <option value="Prog" {% if info.Position == 'Prog' %} selected {% endif %}>Programmer</option>
+                      <option value="Superv" {% if info.Position == 'Superv' %} selected {% endif %}>Supervisor</option>
+                      <option value="Head" {% if info.Position == 'Head' %} selected {% endif %}>Dept. Head</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    <label for="EmpCode" class="form-label">Department</label>
+                    <select class="form-control" name="Department" id="Department" required>
+                      <option value="MIS" {% if info.Department == 'MIS' %} selected {% endif %}>MIS</option>
+                      <option value="M2" {% if info.Department == 'M2' %} selected {% endif %}>M2</option>
+                      <option value="Cadiz" {% if info.Department == 'Cadiz' %} selected {% endif %}>Cadiz</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>  
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" name="update" data-user-id="{{ info.EmpCode }}">Update</button>
+      </div>
+    </form>
+    </div>
+  
+  </div>
+</div>
+
+
+  <!-- DELETE EMPLOYEE MODAL-->
+  <div class="modal fade" id="deleteEmpModal_{{info.EmpCode}}" tabindex="-1"  role="dialog" aria-labelledby="deleteEmpModal_{{info.EmpCode}}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+      <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deleteEmpForm_{{info.EmpCode}}"><strong>DELETE EMPLOYEE INFO</strong></h5>
+              <button type="button" class="close btn btn-danger" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form class="deleteEmpForm" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+                <input type="hidden" name="EmpCode" value="{{info.EmpCode}}">
+                <input type="hidden" name="action" value="deleteEmp">
+              <div class="modal-body">
+              
+                <h5>are you sure you want to delete - <span style="font-weight:bold;">{{ info.Firstname }}?</span></h5>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-danger" name="delete">Delete</button>
+              </div>
+
+          </form>
+
+          </div>
+         
+        </div>
+    </div>
+
+
+  <!-- VIEW EMPLOYEE MODAL -->
+<div class="modal fade" id="viewEmpModal_{{ info.EmpCode }}" tabindex="-1" role="dialog" aria-labelledby="viewEmpModal_{{info.EmpCode}}" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h5 class="modal-title" id="viewEmpModal_{{ info.EmpCode }}"><strong>VIEW EMPLOYEE INFO</strong></h5>
+              <button type="button"  class="close btn btn-danger" data-bs-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+              </button>
+        </div>
+
+        <form action="" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-4 col-sm-4">
+              <div class="thumb-preview form-group">
+                <label for="EmpImg" class="form-label">Profile image</label>
+                {% if info.EmpImg %}
+                <img id="" src="{{ info.EmpImg.url }}" style="height: 300px; width: 300px; border: 1px solid black; cursor: pointer;">
+                {% else %}
+                <img id="" src="https://img.icons8.com/dotty/80/000000/upload.png" style="height: 300px; width: 300px; border: 1px solid black; cursor: pointer;">
+                {% endif %}
+              </div>
+            </div>
+            <div class="col-lg-8 col-sm-8">
+              <div class="row">
+                <div class="col-lg-4 col-sm-4">
+                  <input type="hidden" name="EmpCode" value="{{info.EmpCode}}">
+                  <div class="form-group" style="display:block;">
+                    <label for="name"  class="form-label">Employee Code</label>
+                    <input type="text" name="EmpCode" readonly class="form-control" value="{{info.EmpCode}}" id="EmpCode" required>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-4 col-sm-4">
+                  <div class="form-group">
+                    <label for="name"  class="form-label">Firstname</label>
+                    <input type="text" name="Firstname" readonly class="form-control" value="{{info.Firstname }}" id="Firstname" required>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                  <div class="form-group">
+                    <label for="name"  class="form-label">Middlename</label>
+                    <input type="text" name="Middlename" readonly class="form-control" value="{{info.Middlename }}" id="Middlename" required>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                  <div class="form-group">
+                    <label for="name"  class="form-label">Lastname</label>
+                    <input type="text" name="Lastname" readonly class="form-control" value="{{info.Lastname }}" id="Lastname" required>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-4 col-sm-4">
+                  <div class="form-group">
+                      <label for="Datebirth" class="form-label">Birth Date</label>
+                      <input type="date" readonly class="form-control" value="{{ info.DateofBirth|date:'Y-m-d' }}">
+                  </div>
+                </div>
+                {% if info.Gender == 'M' %}
+                {% endif %}
+                <div class="col-lg-4 col-sm-4">
+                  <div class="form-group">
+                      <label for="Middlename"  class="form-label">Gender</label>
+                      {% if info.Gender == 'M' %}
+                        <input class="form-control" readonly value="Male">
+                      {% elif info.Gender == 'F' %}
+                        <input class="form-control" readonly value="Female">   
+                      {% elif info.Gender == 'O' %}
+                        <input class="form-control" readonly value="Others">
+                      {% endif %}     
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                  <div class="form-group">
+                      <label for="Lastname"  class="form-label">Civil Status</label>
+                    {% if info.CivilStatus == 'S' %}
+                      <input class="form-control" readonly value="Single">
+                    {% elif info.CivilStatus == 'M' %}
+                      <input class="form-control" readonly value="Married">
+                    {% elif info.CivilStatus == 'A' %}
+                      <input class="form-control" readonly value="Annuled">
+                    {% endif %} 
+                  </div>         
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-12 col-sm-12">
+                  <div class="form-group">
+                      <label for="EmpCode" class="form-label">Address</label>
+                      <input type="text" name="Address" readonly class="form-control" value="{{info.Address }}" id="Address" required>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                  <div class="form-group">
+                      <label for="EmpCode" class="form-label">Position</label>
+                      {% if info.Position == 'Prog' %}
+                        <input class="form-control" readonly value="Programmer">
+                      {% elif info.Position == 'Superv' %}
+                        <input class="form-control" readonly value="Supervisor">
+                      {% elif info.Position == 'Head' %}
+                        <input class="form-control" readonly value="Dept. Head">
+                      {% endif %} 
+                  </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                  <div class="form-group">
+                      <label for="EmpCode" class="form-label">Department</label>
+                      {% if info.Department == 'MIS' %}
+                        <input class="form-control" readonly value="MIS">
+                      {% elif info.Department == 'M2' %}
+                        <input class="form-control" readonly value="M2">
+                      {% elif info.Department == 'Cadiz' %}
+                        <input class="form-control" readonly value="Cadiz">
+                      {% endif %} 
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+ 
+          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+{% endfor %}
+
+</tbody>
+</table>
+
+<!-- ADD NEW EMPLOYEE Modal -->
+<div class="modal fade" id="addEmpModal" tabindex="-1" back aria-labelledby="addEmpModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+      <form class="addEmpForm" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="addEmpModal"><strong>ADD EMPLOYEE</strong></h5>
+                    <button type="button" class="btn btn-close btn-custom-danger" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                    </button>
+              </div>
+              <div class="modal-body">
+                  <input type="hidden" name="action" value="addEmp">
+                  <div class="row">
+                    <div class="col-lg-4 col-sm-4">
+                      <div class="thumb-preview form-group m-auto">
+                          <label for="EmpImg" class="form-label">Employee Profile</label>
+                          <input type="file" id="EmpImg" name="EmpImg" accept="image/*" style="display:none">
+                          <img id="blah" src="https://img.icons8.com/dotty/80/000000/upload.png" style="height: 300px; width: 300px; border: 1px solid black; cursor: pointer;">
+                      </div> 
+                  </div>
+                    <div class="col-lg-8 col-sm-8">
+                      <div class="row">
+                        <div class="col-lg-4 col-sm-4">
+                          <div class="form-group">
+                            <label for="EmpCode" class="form-label">Employee Code</label>
+                            <input type="text" readonly name="EmpCode" class="form-control" id="EmpCode1" required>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-lg-4 col-sm-4 form-group">
+                         
+                          <label for="Firstname" class="form-label">AMOUNT</label>
+                              <input type="text" name="Firstname" class="form-control" id="Firstname" required>
+                        
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                          <div class="form-group">
+                              <label for="Middlename"  class="form-label">Middlename</label>
+                              <input type="text" name="Middlename" placeholder="Enter Middlename" class="form-control" id="Middlename" required>
+                          </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                          <div class="form-group">
+                              <label for="Lastname"  class="form-label">Lastname</label>
+                              <input type="text" name="Lastname" class="form-control" id="Lastname" required>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-lg-4 col-sm-4">
+                          <div class="form-group">
+                              <label for="Datebirth"  class="form-label">Birth Date</label>
+                              <input type="date" name="Birthdate" class="form-control" id="Birthdate" required>
+                          </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                          <div class="form-group">
+                              <label for="Middlename"  class="form-label">Gender</label>
+                              <select class="form-control" name="Gender" id="Gender" required>
+                                <option value=""  selected disabled><- - SELECT Gender - -></option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                                <option value="O">Others</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                          <div class="form-group">
+                              <label for="Lastname"  class="form-label">Civil Status</label>
+                              <select class="form-control" name="Status" id="Status" required>
+                                <option value=""  selected disabled><- - SELECT STATUS - -></option>
+                                <option value="S">Single</option>
+                                <option value="M">Married</option>
+                                <option value="A">Annuled</option>
+                            </select>
+                          </div>         
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-lg-12 col-sm-12">
+                          <div class="form-group">
+                              <label for="EmpCode" class="form-label">Address</label>
+                              <input type="text" name="Address" class="form-control" id="Address" required>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                          <div class="form-group">
+                              <label for="EmpCode" class="form-label">Position</label>
+                              <select class="form-control" name="Position" id="Position" required>
+                                <option value=""  selected disabled><- - SELECT Pos - -></option>
+                                <option value="Prog">Programmer</option>
+                                <option value="Superv">Supervisor</option>
+                                <option value="Head">Dept. Head</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                          <div class="form-group">
+                              <label for="EmpCode" class="form-label">Department</label>
+                              <select class="form-control" name="Department" id="Department" required>
+                                <option value=""  selected disabled><- - SELECT Dept - -></option>
+                                <option value="MIS">MIS</option>
+                                <option value="M2">M2</option>
+                                <option value="Cadiz">Cadiz</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                  
+                     
+                    </div>
+                  </div>
+      
+
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary" name="addEmp">SAVE</button>
+              </div>
+          </div>
+      </form>
+  </div>
+</div>
+ 
+  
+{% endblock content %}
